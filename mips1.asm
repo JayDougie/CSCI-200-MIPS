@@ -47,4 +47,8 @@
        #Print invalid message
         li $v0, 4
         la $a0, message
-        syscall 
+        syscall
+    create_decimal:
+        sll $s2, $s2, 4		#shift register left by 4
+        add $s2, $s2, $s1	#add decimal value to register
+        j Pushloop 
