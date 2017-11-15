@@ -28,3 +28,23 @@
         blt $s0, 97, invalid
         blt $s0, 103, is_lowercase
         bgt $s0, 102, invalid
+    is_number:
+        #Convert asciii num to hex equivalent 
+        addi $t1, $s0, -48
+        addi $s1, $t1, 0
+        j create_decimal
+    is_lowercase:
+        #Convert asciii num to hex equivalent
+        addi $t1, $s0, -97
+        addi $s1, $t1, 10
+        j create_decimal
+    is_uppercase:
+        #Convert asciii num to hex equivalent
+        addi $t1, $s0, -65
+        addi $s1, $t1, 10
+        j create_decimal
+    invalid:
+       #Print invalid message
+        li $v0, 4
+        la $a0, message
+        syscall 
