@@ -51,4 +51,42 @@
     create_decimal:
         sll $s2, $s2, 4		#shift register left by 4
         add $s2, $s2, $s1	#add decimal value to register
-        j Pushloop 
+        j Pushloop
+    end:
+        #Print new line
+        li $v0, 4
+        la $a0, newline
+        syscall
+        #Test if there is a 1 in the highhest bit of the register
+        addi $s3,$s3,1			#add 1 to a random register
+        sll $s3,$s3,31			#shift the register by 31 so that 0 is in the higest bit
+        and $s4,$s2,$s3			#test to see if our register with the decimal has a 1 in the highest bit
+        bne $s4, $0, special_print	#if there is a 1 in the highest bit go to the special print
+       
+        #Print $s2 register which has the decimal
+        li $v0, 1
+        add $a0, $s2, $zero
+        syscall
+         
+        # Tell the system this is the end of the program
+        li $v0, 10
+        syscall
+    
+    special_print:
+        li $t3, 10		#Load 10 into a register
+        divu $s2, $t3		#Divide our decimal by 10
+        mflo $t4		#Move from low
+        mfhi $t5		#move from hi    
+        
+        #Print low register
+        li $v0, 1		
+        add $a0, $t4, $zero
+        syscall
+        #print high register
+        li $v0, 1
+        add $a0, $t5, $zero
+        syscall
+        
+        # Tell the system this is the end of the program
+        li $v0, 10
+        syscall 
