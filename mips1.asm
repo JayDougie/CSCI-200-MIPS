@@ -11,3 +11,20 @@
         #save string to $t0
         move $t0, $a0
         syscall
+    Pushloop:
+        lb $s0, 0($t0)		# Loads current character into $s0
+        addi $t0, $t0, 1	# Moves to the next character
+        beq $s0, 0, end		# exit if null
+        beq $s0, 10, end	#exit if newline character		
+        jal checked		# Jumps to checked function
+        j Pushloop		
+
+    checked:
+        # Check whether character is digit 0-9, lowercase a-f, or uppercase A-F by ascii value
+        blt $s0, 48, invalid
+        blt $s0, 58, is_number
+        blt $s0, 65, invalid
+        blt $s0, 71, is_uppercase
+        blt $s0, 97, invalid
+        blt $s0, 103, is_lowercase
+        bgt $s0, 102, invalid
